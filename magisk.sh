@@ -15,27 +15,27 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-set -e
+set -eu
 
-MODPATH=${0%/*}
+MODPATH=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 CURRENT_DATE=$(date +%Y-%m-%d)
 
 init() {
-    cd $MODPATH/module
-    echo "- 切换到模块路径"
+    echo "- module source: $MODPATH/module"
 }
 
 packaged_Modules() {
-    cp -f $MODPATH/config/memory.json $MODPATH/module/config/memory.json
-    zip -r -9 "A1Memory-$CURRENT_DATE.zip" *
-    mv -f "A1Memory-$CURRENT_DATE.zip" "../build/"
-    echo "- 打包成功，模块名" "A1Memory-$CURRENT_DATE.zip"
-}
-
-clear() {
-    rm config/memory.json
+    build_dir="$MODPATH/build"
+    stage=$(mktemp -d "$MODPATH/.work/build.XXXXXX")
+    trap 'rm -rf "$stage"' EXIT
+    cp -a "$MODPATH/module/." "$stage/"
+    cp -f "$MODPATH/config/memory.json" "$stage/config/memory.json"
+    mkdir -p "$build_dir"
+    output="$build_dir/A1Memory-RMX3741.zip"
+    rm -f "$output"
+    (cd "$stage" && zip -r -9 "$output" . >/dev/null)
+    echo "- package built: $output"
 }
 
 init
 packaged_Modules
-clear

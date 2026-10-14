@@ -1,43 +1,50 @@
 <div align="center">
-<h1>A1 memory management</h1>
+<h1>A1 Memory RMX3741 Safe</h1>
 <a href="http://cppmicroservices.org/"><img alt="C Language" src="https://img.shields.io/badge/-C-black?logo=c&style=flat-square&logoColor=ffffff"></a>
 <a href="http://cppmicroservices.org/"><img alt="C++ Language" src="https://img.shields.io/badge/-C++-808080?logo=c%2B%2B&style=flat-square&logoColor=ffffff"></a>
 <a href="https://www.python.org/"><img alt="Bash Shell" src="https://img.shields.io/badge/-Bash-ae9a5a?style=flat-square&logo=shell&logoColor=ffffff"></a>
-<img alt="Android Support" src="https://img.shields.io/badge/Android%208~14-Support-green">
+<img alt="Android Support" src="https://img.shields.io/badge/Android%2015%20RMX3741-Profile-green">
 <img alt="arm64-v8a Support" src="https://img.shields.io/badge/arm64--v8a-Support-green">
 <a href="https://t.me/HCha1234"><img alt="Join Telegram Channel" src="https://img.shields.io/badge/Join%20group-Telegram-brightgreen.svg?logo=telegram"></a>
 <p><b><a href="README.md">English</a> | <a href="README-zh.md">简体中文</a> | <a href="README-ru.md">Русский</a></b></p>
-<p>Third-party memory management running on Android can reduce the running memory used by applications.</p>
+<p>Device-specific cached-process cleanup profile for Realme RMX3741 / Android 15.</p>
 </div>
+
+## RMX3741 safety profile
+
+This fork keeps the arm64 `HC_memory` cleanup engine and its conservative
+cached-process policy. It removes the upstream system_server Xposed APK,
+`libhook_lmkd.so`, and `system.prop` overrides. There is no lmkd kill bypass,
+excessive-power check bypass, thermal override, swap resize, or automatic
+network client.
+
+The boot service waits for Android to finish booting, then starts the native
+cleanup process. If that process exits, the shell retries after 180 seconds;
+there is no recursive shell call or tight retry loop.
+The profile protects Android system/telephony, Google services, Termux,
+WhatsApp, Facebook/Messenger, and Root Call SMS Manager from cached cleanup.
+
+The native executable is stripped third-party code, so static review cannot
+prove absence of every hidden behavior. The arm64 Android 15 smoke test ran it
+with all destructive features disabled and traced `execve`, network, `kill`,
+and `ptrace`: only expected Android inventory commands were observed and no
+network syscall occurred. This profile must remain disabled if that evidence
+is insufficient for your trust requirements.
 
 ## ✨important function
 - Managing the survival and termination of background processes
 - Specifying the release of background application child processes
-- Preventing Low Memory Killer Daemon from killing background processes
 - Automatically releasing non-essential memory
-- Putting applications to sleep to reduce CPU and memory usage
+- Leaving Android 15's Low Memory Killer policy in control
 
 ## 💡Description
-- This module only supports Android 8 to 14, and the platform is limited to arm64-v8a.
+- This build is tailored to Realme RMX3741 on Android 15 and is limited to arm64-v8a.
 - Magisk version should be 20.4+ and ksu is mostly compatible.
 - This module is unlikely to conflict with other modules.
 
 ### Default List Path
 ![列表图片](image/list.jpg)
 - List File: /sdcard/Android/HChai/HC_memory/名单列表.conf
-
-## 📱Terminal UI
-Custom toggle functionality, only supports simple feature toggling. For more detailed parameter configurations, please see 📝 Custom Configuration.
-![UI图片](image/ui_us.jpg)
-How to access the Terminal UI interface?
-- You can use the `amui` command in Termux or execute /sdcard/Android/HChai/HC_memory/`terminal.sh` in the mt manager.
-
-How to save and toggle features?
-- Use the arrow keys for navigation and press Enter to save.
-- If there's no keyboard, click on the bottom right corner "lm" to summon the keyboard.
-
-What does the feature do?
-- An explanation will be added to the Terminal UI later. Currently, only the Json configuration guide is available.
 
 ## 📝Custom Configuration
 The built-in configuration is suitable for most devices, but there are still some devices that may not work with the default configuration. Therefore, more adjustable parameters are provided. This requirement was already taken into consideration when designing the HAMv2 framework, and most parameters can be customized and adjusted. Moreover, this project can be embedded and run within other modules. The JSON configuration file is located at `/data/adb/modules/Hc_memory/config/memory.json`
@@ -76,14 +83,11 @@ Does it conflict with other Magisk modules or Xposed modules?
 Does it cause power consumption during standby?
 - The HAMv2 framework does not cause power consumption during standby, as the A1 memory management enters a sleep state when the device is in standby mode.
 
-Why is the background process still killed even after enabling the lmkd process kill prevention?
-- This is because it only prevents lmkd from killing background processes and does not include the background process killing programs from various phone manufacturers.
+Can this build prevent lmkd from killing background processes?
+- No. The RMX3741 profile deliberately leaves Android's lmkd and power policy active.
 
 How to configure the smart list?
-- To configure the smart list, you need to add the rule "KILL package_name:subprocess_name" in the respective list. Before adding, make sure you understand the functionality and purpose of the subprocess to avoid any unexpected issues.
-
-Why does the device enter fb mode after a certain period of time?
-- Most cases of this issue occur on Samsung devices when the hook to prevent lmkd process killing is enabled. This is likely the cause of the problem. Currently, there is no solution available, but you can try disabling the hook to prevent lmkd process killing to resolve it.
+- Child-process KILL rules are disabled in this RMX3741 profile. Edit the protected `WHITE` entries only if you understand the app's background services.
 
 Why is the process playing audio being paused?
 - The occurrence of audio process being paused is rare. If it indeed happens, you can add the process to the whitelist or disable the app hibernation feature. This will ensure continuous operation of the audio process without being paused.
@@ -92,15 +96,15 @@ Not compatible with this platform: xxxx error when installing the module.
 - Currently, the module only supports the arm-v8a platform and does not support other platforms temporarily.
 
 ## 🚀download
-- [Go to Github to download](https://github.com/OneB1ank/A1Memory/releases)
+- [Go to Github to download](https://github.com/shamrat05/A1Memory/releases)
 
 ## 🌟Star History
 
-<a href="https://star-history.com/#OneB1ank/A1Memory&Timeline">
+<a href="https://star-history.com/#shamrat05/A1Memory&Timeline">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=OneB1ank/A1Memory&type=Timeline&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=OneB1ank/A1Memory&type=Timeline" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=OneB1ank/A1Memory&type=Timeline" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=shamrat05/A1Memory&type=Timeline&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=shamrat05/A1Memory&type=Timeline" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=shamrat05/A1Memory&type=Timeline" />
   </picture>
 </a>
 

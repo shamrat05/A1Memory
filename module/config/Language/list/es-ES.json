@@ -64,6 +64,6 @@
     },    
     "tag": {
         "content": "Por favor, cierre la interfaz de gestión de memoria para evitar un consumo innecesario de energía en segundo plano. Una vez que haya guardado la configuración en la interfaz, salga.",
-        "title": "Por favor, guarde la configuración y reinicie el teléfono. Proceso: UI_memory"
+        "title": "Por favor, guarde la configuración y reinicie el teléfono. La interfaz de terminal está desactivada en el perfil RMX3741"
     }
 }

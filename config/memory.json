@@ -1,7 +1,7 @@
 {
     "project": {
-        "name": "官方配置 [23.09.29]",
-        "author": "火機@coolapk"
+            "name": "RMX3741 Android 15 Safe Profile",
+            "author": "shamrat05"
     },
     "modules": {
         "config": {
@@ -18,47 +18,28 @@
         },
         "log": {
             "path": "/sdcard/Android/HChai/HC_memory/Run.log",
-            "level": "info"
+            "level": "warn"
         },
         "initProcess": {
             "afterTopChange": {
-                "sleep": 2
+            "sleep": 2
             }
         },
         "a1Memory": {
             "enable": true,
-            "oomAdj": 905
+            "oomAdj": 930
         },
         "initCutMemory": {
             "freed": {
                 "enable": true,
-                "level": "80",
-                "regex": "( CAC|SVC|CEM).*",
-                "change": 20
+                "level": "60",
+                "regex": "(CACC|CEM).*",
+                "change": 30
             }
         },
         "initInjection": {
             "enable": false,
-            "processName": "/system/bin/lmkd",
-            "symbolsFunc": "hc_hook",
-            "libraryPath": "/data/adb/modules/Hc_memory/lib/arm64-v8a/libhook_lmkd.so",
-            "lmkd": {
-                "memThreshold": {
-                    "enable": true,
-                    "value": 85
-                },
-                "hookFunc": {
-                    "kill": true,
-                    "pidfd_send_signal": true,
-                    "__android_log_print": false,
-                    "meminfo": {
-                        "updateTime": 30
-                    }
-                },
-                "model": {
-                    "inlineHook": "dobby"
-                }
-            }
+            "reason": "Disabled in the RMX3741 profile; no lmkd hook is packaged."
         },
         "appSleep": {
             "enable": false,
@@ -67,7 +48,7 @@
             "top": "allow"
         },
         "clever": {
-            "enable": true
+            "enable": false
         },
         "crazyKill": {
             "enable": false

@@ -22,32 +22,26 @@ LANGUAGE_PATH_MODULE="$MODULE_PATH/config/Language"
 LOCALE=$(getprop persist.sys.locale)
 LOCALE_JSON_PATH="$LANGUAGE_PATH/list/${LOCALE}.json"
 LOCALE_JSON_PATH_MODULE="$LANGUAGE_PATH_MODULE/list/${LOCALE}.json"
-LMKDRC_PATH="/system/etc/init/lmkd.rc"
-
 config() {
     [ ! -d "$CONFIG_PATH" ] && mkdir -p "$CONFIG_PATH"
     [ ! -f "$CONFIG_PATH/名单列表.conf" ] && cp "$MODPATH/config/HC_memory/名单列表.conf" "$CONFIG_PATH"
     rm -rf "$MODPATH/config/HC_memory"
     [ -f "$MODULE_PATH/config/memory.json" ] && cp "$MODULE_PATH/config/memory.json" "$MODPATH/config/memory.json"
-    cp "$MODPATH/system/bin/amui" "$CONFIG_PATH/terminal.sh"
     ui_print "- update configuration"
     if [ -f "${LOCALE_JSON_PATH}" ]; then
         echo "${LOCALE_JSON_PATH_MODULE}" > "$LANGUAGE_PATH/lg.txt"
     else
         echo "$LANGUAGE_PATH_MODULE/list/en-US.json" > "$LANGUAGE_PATH/lg.txt"
     fi
-    if [ -f "$LMKDRC_PATH" ]; then
-        sed -e '/group/{ /system/ s/system/root/; /root/! s/$/ root/ }' "$LMKDRC_PATH" > "${MODPATH}${LMKDRC_PATH}"
-    else
-        echo "File not found: $LMKDRC_PATH"
-    fi
     ui_print "- update language"
 }
 
 xp() {
-    pm install -r "$MODPATH/app/app-release.apk"
+    # The upstream APK hooks android/system_server. It is intentionally omitted
+    # from this device profile because Android 15 signatures and power policy
+    # differ, and bypassing lmkd/excessive-power checks increases heat.
     rm -rf "$MODPATH/app"
-    ui_print "- install com.hchai.rescueplan"
+    ui_print "- Android 15 safe profile: no system_server Xposed hook"
 }
 
 if [ "$ARCH" != "arm64" ]; then
@@ -58,6 +52,10 @@ else
   xp
 fi
 
-set_perm_recursive "$MODPATH" 0 0 0755 0777
+set_perm_recursive "$MODPATH" 0 0 0755 0644
+set_perm "$MODPATH/HC_memory" 0 0 0755
+set_perm "$MODPATH/service.sh" 0 0 0755
+set_perm "$MODPATH/customize.sh" 0 0 0755
+set_perm "$MODPATH/uninstall.sh" 0 0 0755
 
 ui_print "- Restart and enjoy A1 Memory immediately"

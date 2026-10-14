@@ -64,6 +64,6 @@
     },    
     "tag": {
         "content": "Bitte schließen Sie die Memory-Management-Benutzeroberfläche, um unnötigen Batterieverbrauch zu vermeiden. Nach dem Speichern der Konfiguration in der Benutzeroberfläche sollten Sie diese unbedingt beenden.",
-        "title": "Bitte speichern Sie die Konfiguration und starten Sie das Telefon neu, Prozess: UI_memory"
+        "title": "Bitte speichern Sie die Konfiguration und starten Sie das Telefon neu, Terminal UI ist im RMX3741-Profil deaktiviert"
     }
 }

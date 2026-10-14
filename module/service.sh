@@ -16,34 +16,33 @@
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# 定义模块目录
 MODDIR="$(dirname "$0")"
 COUNT=0
+CONFIG_DIR="/data/media/0/Android/HChai/HC_memory"
+LOGFILE="$CONFIG_DIR/Run.log"
 
-# 等待设备完成引导
-while [ "$(getprop sys.boot_completed)" != "1" ] && [ $COUNT -lt 3]; do
-    sleep 10
-    COUNT=$((COUNT+1))
+# Wait for boot completion with a hard bound. Never leave a recursive shell
+# stack or a tight retry loop on a hot device.
+while [ "$(getprop sys.boot_completed 2>/dev/null)" != "1" ] && [ "$COUNT" -lt 30 ]; do
+    sleep 2
+    COUNT=$((COUNT + 1))
 done
+[ "$(getprop sys.boot_completed 2>/dev/null)" = "1" ] || exit 0
 
-adjustPermissions() {
-    local dir="$1"
-    chmod u+r,u+w,g+r,g+w,o+r,o+w "$dir"
-}
+mkdir -p "$CONFIG_DIR"
+chmod 0755 "$CONFIG_DIR" 2>/dev/null || true
+touch "$LOGFILE"
+chmod 0644 "$LOGFILE" 2>/dev/null || true
 
-init() {
-    cd $MODDIR
-    logfile_path=$(grep -A 3 '"log":' config/memory.json | grep '"path":' | awk -F'"path": "' '{print $2}' | awk -F'"' '{print $1}')
-}
-
-memory() {
-    rm -rf "$logfile_path"
-    touch "$logfile_path"
-    $MODDIR/HC_memory
-    sleep 60
-    memory
-}
-
-init
-adjustPermissions "/data/media/0/Android/HChai/HC_memory"
-memory
+# Run native cleanup. If it exits, retry after three minutes. Android lmkd
+# remains authoritative; no lmkd hook, process-killer bypass, or foreground kill.
+while :; do
+    if [ -f "$LOGFILE" ] && [ "$(wc -c < "$LOGFILE" 2>/dev/null || echo 0)" -gt 1048576 ]; then
+        : > "$LOGFILE"
+    fi
+    # Keep native code in an empty network namespace when Android permits it.
+    # Its inventory uses Binder/system commands, so it does not need network.
+    [ -x /system/bin/unshare ] || exit 0
+    /system/bin/unshare -n "$MODDIR/HC_memory" >> "$LOGFILE" 2>&1 || true
+    sleep 180
+done

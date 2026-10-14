@@ -3,3 +3,5 @@ __pycache__
 /.cache
 /build
 /.DS_Store
+.work/
+build/

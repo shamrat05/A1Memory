@@ -64,6 +64,6 @@
     },    
     "tag": {
         "content": "Please close the memory management UI to avoid unnecessary battery consumption. After saving the configuration in the UI, be sure to exit.",
-        "title": "Please save the configuration and restart the phone, process: UI_memory"
+        "title": "Please save the configuration and restart the phone, terminal UI is disabled in the RMX3741 profile"
     }
 }
