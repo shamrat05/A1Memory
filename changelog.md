@@ -156,9 +156,10 @@
 - 改进编译优化，减少二进制体积
 
 ## 重要更新在频道通知：[TG频道](https://t.me/HCha1234) | [项目地址](https://github.com/OneB1ank/A1Memory)
-## RMX3741 Safe v4-rmx3741.1 (2026-10-14)
+## RMX3741 Safe v4-rmx3741.2 (2026-10-14)
 - Tailored for Realme RMX3741 on Android 15 / arm64.
 - Removed the upstream system_server Xposed APK and lmkd hook payload.
 - Removed vendor/LMK property overrides and the automatic upstream update channel.
 - Disabled child-process kill rules; only listed device packages are protected.
 - Added bounded boot/service handling while keeping Android lmkd and power policy active.
+- Runs cleanup at lower CPU and I/O priority to protect foreground responsiveness and battery.

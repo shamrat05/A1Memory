@@ -43,6 +43,7 @@ while :; do
     # Keep native code in an empty network namespace when Android permits it.
     # Its inventory uses Binder/system commands, so it does not need network.
     [ -x /system/bin/unshare ] || exit 0
-    /system/bin/unshare -n "$MODDIR/HC_memory" >> "$LOGFILE" 2>&1 || true
+    /system/bin/nice -n 10 /system/bin/ionice -c 3 -t \
+        /system/bin/unshare -n "$MODDIR/HC_memory" >> "$LOGFILE" 2>&1 || true
     sleep 180
 done

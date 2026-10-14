@@ -26,6 +26,8 @@ Android 15 / SDK 35, arm64.
   Java network permission surface.
 - The service starts the native process inside an empty network namespace when
   `/system/bin/unshare` is available; it has no reason to access network.
+- The service starts it at nice `10` and idle I/O priority, reducing scheduler
+  and storage competition with foreground work.
 
 ## Runtime smoke test
 

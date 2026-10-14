@@ -1,7 +1,7 @@
 id=Hc_memory
 name=A1 Memory RMX3741 Safe
-version=v4-rmx3741.1
-versionCode=2026101401
+version=v4-rmx3741.2
+versionCode=2026101402
 author=HChai / shamrat05
 description=RMX3741 Android 15 safe cached-process memory cleanup; no Xposed lmkd hook, power-policy bypass, swap resize, or thermal override. project: https://github.com/shamrat05/A1Memory
 originalAuthor=HChai
